@@ -9,6 +9,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import com.cloud.consult.documents.CourseProfessor;
+import com.cloud.consult.documents.CourseQualify;
+import com.cloud.consult.documents.CourseStudent;
 import com.cloud.consult.documents.ProfessorCourse;
 import com.cloud.consult.documents.StudentQualify;
 import com.cloud.consult.documents.ProfessorFamily;
@@ -86,4 +88,32 @@ public class ConsultServiceImpl implements IConsultService {
 		}).collect(Collectors.toList());
 	}
 
+	@Override
+	public List<CourseQualify> getAllCourseQualify() {
+		List<Course> course = Arrays.asList(
+				clientRest.getForObject("http://localhost:8604/course/", Course[].class));
+		
+		return course.stream().map(c -> {
+			List<Qualify> listQualify = Arrays.asList(
+					clientRest.getForObject("http://localhost:8605/qualify/idCourse/" + c.getId(), Qualify[].class));
+			
+			return new CourseQualify(c, listQualify);
+		}).collect(Collectors.toList());
+	}
+
+	@Override
+	public List<CourseStudent> getAllCourseStudent() {
+		List<Course> listCourse = Arrays.asList(
+				clientRest.getForObject("http://localhost:8604/course/", Course[].class));
+		
+		return listCourse.stream().map(c -> {
+			List<Qualify> lq = Arrays.asList(
+					clientRest.getForObject("http://localhost:8605/qualify/idCourse/" + c.getId(), Qualify[].class));
+			return new CourseStudent(c, lq.stream().map(q -> {
+				Student st = clientRest.getForObject("http://localhost:8601/student/id/" + q.getIdStudent(), Student.class);
+				return st;
+			}).collect(Collectors.toList()));
+		}).collect(Collectors.toList());
+	}
+	
 }

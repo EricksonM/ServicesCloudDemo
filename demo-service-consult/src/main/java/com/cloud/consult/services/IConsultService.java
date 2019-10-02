@@ -3,6 +3,8 @@ package com.cloud.consult.services;
 import java.util.List;
 
 import com.cloud.consult.documents.CourseProfessor;
+import com.cloud.consult.documents.CourseQualify;
+import com.cloud.consult.documents.CourseStudent;
 import com.cloud.consult.documents.ProfessorCourse;
 import com.cloud.consult.documents.StudentQualify;
 import com.cloud.consult.documents.ProfessorFamily;
@@ -19,4 +21,8 @@ public interface IConsultService {
 	public List<ProfessorFamily> getAllProfessorFamily();
 	
 	public List<CourseProfessor> getAllCourseProfessor();
+	
+	public List<CourseQualify> getAllCourseQualify();
+	
+	public List<CourseStudent> getAllCourseStudent();
 }
